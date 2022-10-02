@@ -52,7 +52,7 @@ varde = function(tabell, birth.ff, z, maxAge, kalkyldatum, m, s, a, b, c, Rate, 
     if (xD < xP+s) {
       gar.payments = s * 12 -  max(ceiling((xD - xP) * 12), 0)
       xN = xP + (s * 12 - gar.payments) * 1 / 12
-      Disc(nu, nu + xN - xD, Rate, rKorr, deltaKorr) * annuitet(nu + xN - xD, gar.payments, Rate, deltaKorr, rKorr)
+      Disc(xN - xD, Rate, rKorr, deltaKorr) * annuitet(xN - xD, gar.payments, Rate, deltaKorr, rKorr)
     } else 0.0
     
   # APGU Livsvarig uppskjuten livränta med återbetalningsskydd till ålder z,
@@ -89,12 +89,12 @@ livranta = function(x, nu, n,makeA,makeB,makeC, Rate, deltaKorr, rKorr) {
 }
 
 # Annuitet
-annuitet = function(nu, n, Rate, deltaKorr, rKorr) {
-  # Sum Disc n months from nu 
-  h = 1/12
-  tmp = 0
+annuitet <- function(nu, n, Rate, deltaKorr, rKorr) {
+  # Sum Disc n months from nu
+  h <- 1/12
+  tmp <- 0
   for (i in 0:(n-1)) {
-    tmp = tmp + Disc(nu, nu+i*h, Rate, rKorr, deltaKorr)
+    tmp <- tmp + Disc(nu+i*h, Rate, rKorr, deltaKorr)
   }
   tmp
 }
