@@ -1,4 +1,7 @@
-﻿# History files
+﻿# Idea
+.idea
+
+# History files
 .Rhistory
 .Rapp.history
 
