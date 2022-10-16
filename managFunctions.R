@@ -19,12 +19,12 @@ aterkopsVarde = function(kalkyldatum, birth.ff, sex.ff, pensions.alder, gb, m, s
   
   param = allParameters(kalkyldatum, grund, sex.ff, birth.ff)
   
-  A = gb * varde(tabell, birth.ff, pensions.alder, maxAge,kalkyldatum, m, s, param$Make$a, param$Make$b, param$Make$c, param$rate$Rate, param$rate$skatt, param$rate$epsKostnad,param$rate$nu)
+  A = gb * varde(tabell, birth.ff, pensions.alder, maxAge,kalkyldatum, m, s, param$Make$a, param$Make$b, param$Make$c, param$rate$Rate, param$rate$skatt, param$rate$epsKostnad)
 }
 
 # VARDE
 # varde = (tabell, birth.ff, z, maxAge, kalkyldatum, m, s, a, b, c, Rate, rKorr, deltaKorr, nu)
-varde = function(tabell, birth.ff, z, maxAge, kalkyldatum, m, s, a, b, c, Rate, rKorr, deltaKorr, nu) {
+varde = function(tabell, birth.ff, z, maxAge, kalkyldatum, m, s, a, b, c, Rate, rKorr, deltaKorr) {
   xD = tidur(birth.ff, kalkyldatum)        # Age today
   xP = tidur(birth.ff, zDate(birth.ff, z)) # Age at z
   #xS = xP + s                        # Age at z + s
@@ -52,7 +52,7 @@ varde = function(tabell, birth.ff, z, maxAge, kalkyldatum, m, s, a, b, c, Rate, 
     if (xD < xP+s) {
       gar.payments = s * 12 -  max(ceiling((xD - xP) * 12), 0)
       xN = xP + (s * 12 - gar.payments) * 1 / 12
-      Disc(xN - xD, Rate, rKorr, deltaKorr) * annuitet(xN - xD, gar.payments, Rate, deltaKorr, rKorr)
+      Disc(0, xN - xD, Rate, rKorr, deltaKorr) * annuitet(xN - xD, gar.payments, Rate, deltaKorr, rKorr)
     } else 0.0
     
   # APGU Livsvarig uppskjuten livränta med återbetalningsskydd till ålder z,
@@ -94,7 +94,7 @@ annuitet <- function(nu, n, Rate, deltaKorr, rKorr) {
   h <- 1/12
   tmp <- 0
   for (i in 0:(n-1)) {
-    tmp <- tmp + Disc(nu+i*h, Rate, rKorr, deltaKorr)
+    tmp <- tmp + Disc(nu, nu+i*h, Rate, rKorr, deltaKorr)
   }
   tmp
 }

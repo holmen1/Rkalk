@@ -26,7 +26,10 @@ allParameters <- function(kalkyldatum, grund, sex, birth, typ='TJP1') {
   b <- 0
   c <- 0
   make <- list("a"=a, "b"=b, "c"=c*log(10))
-  Rate <- 0.03
+
+  data <- read.csv('Data/SE_Cash_Return_FTA_2022-06-30.csv')
+  Rate <- data$Aktsam_Trad
+  Rate <- rep(0.02, 901)
 
   skatt <- 0.0
   epsKostnad <- 0.00 #Intensitet
@@ -40,15 +43,15 @@ allParameters <- function(kalkyldatum, grund, sex, birth, typ='TJP1') {
 # Rate intensity, cost and tax added
 delta <- function(t, Rate, skatt, epsDelta) {
   
-  grossRate <- Rate
+  grossRate <- log(1 + Rate[t + 1])
   
   # Correction of intensity
   grossRate*(1-skatt) - epsDelta
 }
 
 
-Disc <- function(t, Rate, skatt, epsDelta) {
-  exp(-t*delta(t, Rate, skatt, epsDelta))
+Disc <- function(nu, t, Rate, skatt, epsDelta) {
+  exp(nu*delta(nu, Rate, skatt, epsDelta) - t*delta(t, Rate, skatt, epsDelta))
 }
 
 
